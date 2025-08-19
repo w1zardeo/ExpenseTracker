@@ -45,7 +45,7 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.buttonContainer}>
-            <Button onPress={() => navigation.navigate('Register')}>
+            <Button onPress={() => navigation.navigate('Tabs')}>
                 <Typo size={22} color={colors.neutral900} fontWeight="600">
                     Get started
                 </Typo>
