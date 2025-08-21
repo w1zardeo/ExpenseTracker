@@ -1,9 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from '../screens/HomeScreen';
-import WelcomeScreen from '../screens/WelcomeScreen';
+import HomeScreen from "../screens/HomeScreen";
+import WelcomeScreen from "../screens/WelcomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-import BottomTabs from './BottomTabs';
+import BottomTabs from "./BottomTabs";
+import WalletModal from "../modals/WalletModal";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,10 +31,19 @@ function AppNavigator() {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="Tabs"
         component={BottomTabs}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="WalletModal"
+        component={WalletModal}
+        options={{
+          headerShown: false,
+          presentation: "modal", // відкриває як модалку
+          animation: "slide_from_bottom", // анімація знизу
+        }}
       />
     </Stack.Navigator>
   );

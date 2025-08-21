@@ -10,17 +10,27 @@ import { Ionicons } from "@expo/vector-icons";
 import { isLoading } from "expo-font";
 import Button from "../components/Button";
 import { useNavigation } from "expo-router";
+import { useAuth } from "../contexts/authContext";
 
 export default function LoginScreen() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const {login: loginUser} = useAuth();
 
   const handleSubmit = async () => {
     if (!emailRef.current && !passwordRef.current) {
       Alert.alert("Login", "Please fill all the field")
       return;
+    }
+    setIsLoading(true);
+    const res = await loginUser(emailRef.current, passwordRef.current);
+    setIsLoading(false);
+    if (!res.success) {
+      Alert.alert("Login", res.msg)
+    } else {
+      navigation.navigate('Tabs')
     }
     
   };
@@ -71,7 +81,7 @@ export default function LoginScreen() {
           <Typo size={14} color={colors.text} style={{alignSelf: 'flex-end'}}>Fogot Password</Typo>
 
           <Button loading={isLoading} onPress={handleSubmit}>
-            <Typo fontWeight="700" color={colors.black} size={21}>Login</Typo>
+            <Typo fontWeight="700" color={colors.black} size={21}>Sign in</Typo>
           </Button>
 
           <View style={styles.footer}>

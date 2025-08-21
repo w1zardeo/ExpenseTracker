@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { isLoading } from "expo-font";
 import Button from "../components/Button";
 import { useNavigation } from "expo-router";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/authContext";
 
 export default function LoginScreen() {
   const emailRef = useRef();
@@ -18,20 +18,27 @@ export default function LoginScreen() {
   const nameRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-  // const {register} = useAuth();
+  const { register } = useAuth();
 
   const handleSubmit = async () => {
-    if (!emailRef.current && !passwordRef.current && !nameRef.current) {
-      Alert.alert("Login", "Please fill all the field")
+    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
+      Alert.alert("Login", "Please fill all the fields");
       return;
-    };
-    // setIsLoading(true);
-    // const res = await registerUser(
-    //   emailRef.current,
-    //   passwordRef.current,
-    //   nameRef.current
-    // )
-    
+    }
+
+    setIsLoading(true);
+    const res = await register(
+      emailRef.current,
+      passwordRef.current,
+      nameRef.current
+    );
+    setIsLoading(false);
+
+    if (res.success) {
+      navigation.navigate("Tabs");
+    } else {
+      Alert.alert("Sign up", res.msg);
+    }
   };
 
   return (
@@ -90,13 +97,17 @@ export default function LoginScreen() {
           />
 
           <Button loading={isLoading} onPress={handleSubmit}>
-            <Typo fontWeight="700" color={colors.black} size={21}>Login</Typo>
+            <Typo fontWeight="700" color={colors.black} size={21}>
+              Login
+            </Typo>
           </Button>
 
           <View style={styles.footer}>
             <Typo size={15}>Already have account</Typo>
-            <Pressable onPress={() => navigation.navigate('Login')}>
-              <Typo size={15} fontWeight="700" color={colors.primary}>Login</Typo>
+            <Pressable onPress={() => navigation.navigate("Login")}>
+              <Typo size={15} fontWeight="700" color={colors.primary}>
+                Sign in
+              </Typo>
             </Pressable>
           </View>
         </View>

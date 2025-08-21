@@ -1,6 +1,6 @@
 import { colors, radius } from "../constants/theme";
 import { verticalScale } from "../utils/styling";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import Loading from "./Loading";
 
 const Button = ({ style, onPress, loading = false, children }) => {
