@@ -5,6 +5,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import BottomTabs from "./BottomTabs";
 import WalletModal from "../modals/WalletModal";
+import ProfileModal from "../modals/ProfileModal";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,15 @@ function AppNavigator() {
       <Stack.Screen
         name="WalletModal"
         component={WalletModal}
+        options={{
+          headerShown: false,
+          presentation: "modal", // відкриває як модалку
+          animation: "slide_from_bottom", // анімація знизу
+        }}
+      />
+      <Stack.Screen
+        name="ProfileModal"
+        component={ProfileModal}
         options={{
           headerShown: false,
           presentation: "modal", // відкриває як модалку

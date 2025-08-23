@@ -4,7 +4,7 @@ import { colors, radius, spacingY, spacingX } from "../constants/theme";
 import { verticalScale, scale } from "react-native-size-matters";
 import Typo from "../components/Typo";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 function WalletScreen() {
     const navigation = useNavigation();

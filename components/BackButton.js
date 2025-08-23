@@ -9,7 +9,7 @@ const BackButton = ({ style, iconSize = 30 }) => {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Welcome')}
+      onPress={() => navigation.goBack()}
       style={[styles.button, style]}
     >
       <Ionicons

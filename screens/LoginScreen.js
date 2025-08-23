@@ -9,7 +9,7 @@ import Input from "../components/Input";
 import { Ionicons } from "@expo/vector-icons";
 import { isLoading } from "expo-font";
 import Button from "../components/Button";
-import { useNavigation } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../contexts/authContext";
 
 export default function LoginScreen() {

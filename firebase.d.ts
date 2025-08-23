@@ -1,7 +1,6 @@
-import { Persistence, ReactNativeAsyncStorage } from "firebase/auth";
-
 declare module "firebase/auth" {
-  export declare function getReactNativePersistence(
-    storage: ReactNativeAsyncStorage,
-  ): Persistence;
+  import { Persistence } from "firebase/auth";
+
+  // TS не бачить цю функцію, але в runtime вона є
+  export function getReactNativePersistence(storage: any): Persistence;
 }

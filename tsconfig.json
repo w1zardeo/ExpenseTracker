@@ -1,9 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "types": ["./firebase.d.ts"],
     "paths": {
       "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
     }
   },
-  "include": ["firebase.d.ts", "src"]
+  "include": ["src", "firebase.d.ts"]
 }

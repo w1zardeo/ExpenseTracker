@@ -1,14 +1,110 @@
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Touchable,
+  TouchableOpacity,
+  Alert
+} from "react-native";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { colors, radius, spacingX, spacingY } from "../constants/theme";
 import { verticalScale } from "../utils/styling";
 import Header from "../components/Header";
 import Typo from "../components/Typo";
 import { useAuth } from "../contexts/authContext";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
+import { Ionicons } from "@expo/vector-icons";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { useNavigation } from "@react-navigation/native";
 
 function ProfileScreen() {
   const { user } = useAuth();
+  const navigation = useNavigation();
+
+  const accountOptions = [
+    {
+      title: "Edit Profile",
+      icon: (
+        <Ionicons name="person" size={26} color={colors.white} weight="fill" />
+      ),
+      routeName: "ProfileModal",
+      bgColor: "#6366f1",
+    },
+    {
+      title: "Settings",
+      icon: (
+        <Ionicons
+          name="settings"
+          size={26}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      //   routeName: '/(modals)/profileModal',
+      bgColor: "#059669",
+    },
+    {
+      title: "Privacy Policy",
+      icon: (
+        <Ionicons
+          name="lock-closed"
+          size={26}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      //   routeName: '/(modals)/profileModal',
+      bgColor: colors.neutral600,
+    },
+    {
+      title: "Logout",
+      icon: (
+        <Ionicons
+          name="log-out-outline"
+          size={26}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      // routeName: "/(modals)/profileModal",
+      bgColor: "#e11d48",
+    },
+  ];
+
+  const handleLogout = async () => {
+    await signOut(auth);
+     navigation.reset({ // <-- Очищаємо стек і переходимо на Login
+        index: 0,
+        routes: [{ name: "Welcome" }],
+      });
+  }
+
+  const showLogoutAlert = () => {
+    Alert.alert('Confirm', "Are you sure you want to logout", [
+        {
+            text: 'Cancel',
+            onPress: () => console.log('cancel logout'),
+            style: 'cancel'
+        },
+        {
+            text: 'Logout',
+            onPress: () => handleLogout(),
+            style: 'destructive'
+        }
+    ])
+  }
+
+
+
+  const handlePress = async (item) => {
+    if (item.title == 'Logout') {
+        showLogoutAlert();
+    }
+
+    if (item.routeName) navigation.navigate(item.routeName)
+  }
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -16,7 +112,12 @@ function ProfileScreen() {
 
         <View style={styles.userInfo}>
           <View>
-            <Image source={user?.image} style={styles.accountOptions} contentFit="cover" transition={100}/>
+            <Image
+              source={user?.image}
+              style={styles.avatar}
+              contentFit="cover"
+              transition={100}
+            />
           </View>
           <View style={styles.nameContainer}>
             <Typo size={24} fontWeight="600">
@@ -26,6 +127,37 @@ function ProfileScreen() {
               {user?.email}
             </Typo>
           </View>
+        </View>
+        <View style={styles.accountOptions}>
+          {accountOptions.map((item, index) => {
+            return (
+              <View 
+              key={index.toString()}
+              style={styles.listItem}>
+                <TouchableOpacity style={styles.flexRow} onPress={() => handlePress(item)}>
+                  <View
+                    style={[
+                      styles.listIcon,
+                      {
+                        backgroundColor: item?.bgColor,
+                      },
+                    ]}
+                  >
+                    {item.icon && item.icon}
+                  </View>
+                  <Typo size={16} style={{ flex: 1 }} fontWeight="500">
+                    {item.title}
+                  </Typo>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={verticalScale(20)}
+                    weight="bold"
+                    color={colors.white}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
       </View>
     </ScreenWrapper>

@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, Input } from 'react-native';
 import ModalWrapper from '../components/ModalWrapper';
 import Typo from '../components/Typo';
 import { use, useState } from 'react';
-import { useNavigation } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import Header from '../components/Header';
 import BackButton from '../components/BackButton';
