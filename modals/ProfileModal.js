@@ -22,12 +22,15 @@ import Button from "../components/Button";
 import { useAuth } from "../contexts/authContext";
 import { updateUser } from "../services/userService";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import { getProfileImage } from "../services/imageService";
 
 function ProfileModal() {
   const navigation = useNavigation();
   const { user, updateUserData } = useAuth();
   const [userData, setUserData] = useState({
     name: "",
+    image: null
   });
 
   const [loading, setLoading] = useState(false);
@@ -35,26 +38,41 @@ function ProfileModal() {
   useEffect(() => {
     setUserData({
       name: user?.name || "",
+      image: user?.image || ""
     });
   }, [user]);
- 
-  const onSubmit = async () => {
-  const name = userData.name.trim();
-  if (!name) {
-    Alert.alert("Name", "Please fill all the fields");
-    return;
-  }
-  setLoading(true);
-  const res = await updateUser(user?.uid, { name }); // відправляй тільки name
-  setLoading(false);
-  if (res.success) {
-    await updateUserData(user?.uid); // ✅ чекаємо оновлення
-    navigation.goBack();
-  } else {
-    Alert.alert('User', res.msg);
-  }
-};
 
+  const onPickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      // allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setUserData({ ...userData, image: result.assets[0] });
+    }
+  };
+
+  const onSubmit = async () => {
+    const name = userData.name.trim();
+    if (!name) {
+      Alert.alert("Name", "Please fill all the fields");
+      return;
+    }
+    setLoading(true);
+    const res = await updateUser(user?.uid, userData); // відправляй тільки name
+    setLoading(false);
+    if (res.success) {
+      await updateUserData(user?.uid); // ✅ чекаємо оновлення
+      navigation.goBack();
+    } else {
+      Alert.alert("User", res.msg);
+    }
+  };
 
   return (
     <ModalWrapper>
@@ -66,10 +84,11 @@ function ProfileModal() {
         />
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.avatarContainer}>
-            <Image style={styles.avatar} />
+            <Image style={styles.avatar} source={getProfileImage(userData.image)}/>
 
             <TouchableOpacity style={styles.editIcon}>
               <Ionicons
+                onPress={onPickImage}
                 name="pencil"
                 size={verticalScale(20)}
                 color={colors.neutral800}
